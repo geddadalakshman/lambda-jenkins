@@ -1,4 +1,4 @@
 import json
 def lambda_handler(event, context):
     # TODO implement
-    return {“data”: “Test build!”}
+    return {“data”: “lambda-update-build!”}
