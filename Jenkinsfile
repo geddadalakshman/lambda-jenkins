@@ -32,7 +32,6 @@ pipeline {
                     // Upload the zip file to the S3 bucket
                     sh """
                     aws s3 cp ${env.FILE_NAME}.zip s3://${env.S3_BUCKET_NAME}/${env.FOLDER_NAME}.zip
-                    aws s3 cp s3://${env.S3_BUCKET_NAME}/${env.S3_OBJECT_KEY} ${env.S3_OBJECT_KEY}
                     """
                 }
             }
