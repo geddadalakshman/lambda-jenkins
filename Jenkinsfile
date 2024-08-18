@@ -21,10 +21,10 @@ pipeline {
 
         stage('Deploy to Prod') {
             when {
-                branch 'prod'
+                branch 'main'
             }
             steps {
-                echo "Deploying to prod environment"
+                echo "Deploying to main environment"
                 // Add your prod deployment steps here
             }
         }
