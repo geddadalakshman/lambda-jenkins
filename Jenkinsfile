@@ -28,13 +28,23 @@ pipeline {
 
         stage('Upload to S3') {
             steps {
-                withAWS(credentials: 'aws-credentials-id', region: "${env.AWS_REGION}") {
+                withAWS(credentials: 'aws-credentials', region: "${env.AWS_REGION}") {
                     // Upload the zip file to the S3 bucket
                     sh """
                     aws s3 cp ${env.FILE_NAME}.zip s3://${env.S3_BUCKET_NAME}/${env.FOLDER_NAME}.zip
                     """
                 }
             }
+        }
+        stage('download from S3') {
+            steps {
+                withAWS(credentials: 'aws-credentials', region: "${env.AWS_REGION}") {
+                    // Upload the zip file to the S3 bucket
+                    sh """
+                    aws s3 cp ${env.FILE_NAME}.zip s3://${env.S3_BUCKET_NAME} ${env.FOLDER_NAME}.zip
+                    """
+                }               
+            }            
         }
     }
     
