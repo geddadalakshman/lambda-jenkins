@@ -48,7 +48,7 @@ pipeline {
         stage('Checkout Code') {
             steps {
                 // Checkout the code from the determined GitHub repository
-                git branch: 'dev', url: "${env.GITHUB_REPO}"
+                git branch: 'main', url: "${env.GITHUB_REPO}"
             }
         }
 
