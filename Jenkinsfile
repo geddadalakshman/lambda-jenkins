@@ -46,6 +46,19 @@ pipeline {
                 }               
             }            
         }
+        stage('Update Lambda Function') {
+            steps {
+                withAWS(credentials: 'aws-credentials-id', region: "${env.AWS_REGION}") {
+                    // Update the Lambda function with the zip file from S3
+                    sh """
+                    aws lambda update-function-code \
+                        --function-name ${env.LAMBDA_FUNCTION_NAME} \
+                        --s3-bucket ${env.S3_BUCKET_NAME} \
+                        --s3-key ${env.S3_OBJECT_KEY}
+                    """
+                }
+            }
+        }        
     }
     
     post {
