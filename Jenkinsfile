@@ -13,7 +13,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Checkout the code from GitHub
-                git branch: 'main', url: 'https://github.com/geddadalakshman/lambda-jenkins.git'
+                git branch: 'main', url: 'https://github.com/your-repo-url.git'
             }
         }
         
@@ -21,33 +21,23 @@ pipeline {
             steps {
                 script {
                     // Zip the specified folder
-                    sh "zip -r ${env.FILE_NAME}.zip ${env.FILE_NAME}"
+                    sh "zip -r ${env.FOLDER_NAME}.zip ${env.FOLDER_NAME}"
                 }
             }
         }
 
         stage('Upload to S3') {
             steps {
-                withAWS(credentials: 'aws-credentials', region: "${env.AWS_REGION}") {
+                withAWS(credentials: 'aws-credentials-id', region: "${env.AWS_REGION}") {
                     // Upload the zip file to the S3 bucket
                     sh """
-                    aws s3 cp ${env.FILE_NAME}.zip s3://${env.S3_BUCKET_NAME}/
+                    aws s3 cp ${env.FOLDER_NAME}.zip s3://${env.S3_BUCKET_NAME}/${env.FOLDER_NAME}.zip
+                    aws s3 cp s3://${env.S3_BUCKET_NAME}/${env.S3_OBJECT_KEY} ${env.S3_OBJECT_KEY}
                     """
                 }
             }
         }
-    
-        stage('Download from S3') {
-                steps {
-                    withAWS(credentials: 'aws-credentials-id', region: "${env.AWS_REGION}") {
-                        // Download the zip file from S3
-                        sh """
-                        aws s3 cp s3://${env.S3_BUCKET_NAME}/${env.S3_OBJECT_KEY} ${env.S3_OBJECT_KEY}
-                        """
-                    }
-                }
-            }
-    
+
         stage('Update Lambda Function') {
             steps {
                 withAWS(credentials: 'aws-credentials-id', region: "${env.AWS_REGION}") {
@@ -61,12 +51,12 @@ pipeline {
                 }
             }
         }
+    }
     
     post {
         always {
-            // Clean up the workspace.
+            // Clean up the workspace
             cleanWs()
         }
     }
-}
 }
